@@ -14,4 +14,26 @@ public class CreateUserRequest {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	@JsonProperty
+	private String password;
+
+	@JsonProperty
+	private String confirmPassword;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 }
