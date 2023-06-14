@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -32,8 +31,8 @@ public class User {
 	@JsonIgnore
     private Cart cart;
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 
 	public String getPassword() {
