@@ -4,7 +4,6 @@ import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.User;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
@@ -58,4 +57,5 @@ public class TestUtils {
         entityManager.flush();
         return item;
     }
+
 }
