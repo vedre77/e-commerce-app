@@ -8,21 +8,31 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
+import java.net.URI;
+import java.util.Arrays;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
 
     private UserController userController;
     private UserRepository userRepo = mock(UserRepository.class);
     private CartRepository cartRepo = mock(CartRepository.class);
     private BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Before
     public void setUp() {
@@ -112,6 +122,24 @@ public class UserControllerTest {
             // Assert that the exception was thrown with the expected message
             assertEquals("Database error", e.getMessage());
         }
+    }
+
+    @Test
+    public void getUserProfileWithoutAuthentication() {
+        ResponseEntity<User> response = restTemplate.getForEntity("/api/user/{username}", User.class, "testUser");
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetCartDetailsWithoutAuthentication() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/order/history/{username}");
+        URI uri = builder.build("testUser");
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
 }
