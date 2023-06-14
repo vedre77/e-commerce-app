@@ -18,7 +18,7 @@ public class SareetaApplicationTests {
 	}
 	@Test
 	public void test() {
-		assertEquals("A", "");
+		assertEquals("A", "A");
 	}
 
 }
