@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestEntityManager
 public class CartControllerTest {
 
     private CartController cartController;
@@ -49,7 +47,7 @@ public class CartControllerTest {
     }
 
     @Test
-    public void testAddToCart() {
+    public void testAddAndRemoveFromCart() {
         // Set up test data
         User user = testService.createUser();
         Cart cart = testService.createCart(user);
@@ -60,21 +58,37 @@ public class CartControllerTest {
         when(userRepo.findByUsername("testUser")).thenReturn(user);
         when(itemRepo.findById(1L)).thenReturn(Optional.of(item));
 
-        // Create request
-        ModifyCartRequest request = new ModifyCartRequest();
-        request.setUsername("testUser");
-        request.setItemId(1L);
-        request.setQuantity(1);
+        // Add item to the cart
+        ModifyCartRequest addToCartRequest = new ModifyCartRequest();
+        addToCartRequest.setUsername("testUser");
+        addToCartRequest.setItemId(1L);
+        addToCartRequest.setQuantity(1);
 
-        // Call the controller method
-        ResponseEntity<Cart> response = cartController.addTocart(request);
+        // Call the controller method to add item
+        ResponseEntity<Cart> addToCartResponse = cartController.addTocart(addToCartRequest);
 
-        // Verify the response
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        Cart responseBody = response.getBody();
-        assertNotNull(responseBody);
-        assertEquals(1, responseBody.getItems().size());
-        assertEquals(item, responseBody.getItems().get(0));
+        // Verify the response for adding item
+        assertNotNull(addToCartResponse);
+        assertEquals(HttpStatus.OK, addToCartResponse.getStatusCode());
+        Cart addedItemCart = addToCartResponse.getBody();
+        assertNotNull(addedItemCart);
+        assertEquals(1, addedItemCart.getItems().size());
+        assertEquals(item, addedItemCart.getItems().get(0));
+
+        // Remove item from the cart
+        ModifyCartRequest removeFromCartRequest = new ModifyCartRequest();
+        removeFromCartRequest.setUsername("testUser");
+        removeFromCartRequest.setItemId(1L);
+        removeFromCartRequest.setQuantity(1);
+
+        // Call the controller method to remove item
+        ResponseEntity<Cart> removeFromCartResponse = cartController.removeFromcart(removeFromCartRequest);
+
+        // Verify the response for removing item
+        assertNotNull(removeFromCartResponse);
+        assertEquals(HttpStatus.OK, removeFromCartResponse.getStatusCode());
+        Cart removedItemCart = removeFromCartResponse.getBody();
+        assertNotNull(removedItemCart);
+        assertEquals(0, removedItemCart.getItems().size());
     }
 }
