@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -109,19 +110,17 @@ public class UserControllerTest {
         // Mock the UserRepository to return a null User object when findByUsername is called with the new username
         when(userRepo.findByUsername("newuser")).thenReturn(null);
 
-        // Mock the UserRepository to throw an exception when save is called with the new user
-        when(userRepo.save(any(User.class))).thenThrow(new RuntimeException("Database error"));
+        // Mock the UserRepository to throw a DataAccessException when save is called with the new user
+        when(userRepo.save(any(User.class))).thenThrow(new DataAccessException("Database error") {});
 
-        // Use a try-catch block to catch the expected RuntimeException
-        try {
-            // Call the createUser method with the mock request object
-            ResponseEntity<User> response = userController.createUser(request);
-            // If no exception is thrown, fail the test
-            fail("Expected a RuntimeException to be thrown");
-        } catch (RuntimeException e) {
-            // Assert that the exception was thrown with the expected message
-            assertEquals("Database error", e.getMessage());
-        }
+        // Call the createUser method with the mock request object
+        ResponseEntity<User> response = userController.createUser(request);
+
+        // Assert that the response status code is 400 (bad request)
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        // Assert that the response body contains the expected error message
+        assertEquals("An error occurred while processing your request.", response.getBody().getUsername());
     }
 
     @Test
@@ -132,7 +131,6 @@ public class UserControllerTest {
 
     @Test
     public void testGetCartDetailsWithoutAuthentication() {
-
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);

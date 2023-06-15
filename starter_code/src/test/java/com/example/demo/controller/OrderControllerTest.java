@@ -37,7 +37,6 @@ public class OrderControllerTest {
     private UserRepository userRepo = mock(UserRepository.class);
     private OrderRepository orderRepo = mock(OrderRepository.class);
     private CartRepository cartRepo = mock(CartRepository.class);
-
     private BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
 
     @Before
