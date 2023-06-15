@@ -9,16 +9,15 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 @Service
 public class TestService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CartRepository cartRepository;
-
     @Autowired
     private ItemRepository itemRepository;
 
@@ -33,6 +32,7 @@ public class TestService {
     public Cart createCart(User user) {
         Cart cart = new Cart();
         cart.setUser(user);
+        cart.setItems(new ArrayList<>()); // Initialize the items field with an empty list
         cart.setTotal(BigDecimal.ZERO);
         cartRepository.save(cart);
         return cart;
