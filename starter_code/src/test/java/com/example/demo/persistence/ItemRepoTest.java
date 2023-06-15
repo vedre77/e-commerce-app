@@ -38,9 +38,13 @@ public class ItemRepoTest {
         // Check if the item was found
         assertTrue(foundItem.isPresent());
         assertEquals(item.getId(), foundItem.get().getId());
+        assertEquals("Test Item", foundItem.get().getName());
+        assertEquals("This is a test item.", foundItem.get().getDescription());
 
         // Update the item
         item.setPrice(BigDecimal.valueOf(20));
+        item.setName("Updated Item");
+        item.setDescription("This is an updated item.");
         entityManager.merge(item);
         entityManager.flush();
 
@@ -50,6 +54,8 @@ public class ItemRepoTest {
         // Check if the updated item was found
         assertTrue(updatedItem.isPresent());
         assertEquals(BigDecimal.valueOf(20), updatedItem.get().getPrice());
+        assertEquals("Updated Item", updatedItem.get().getName());
+        assertEquals("This is an updated item.", updatedItem.get().getDescription());
 
         // Delete the item
         itemRepository.delete(item);
