@@ -4,6 +4,8 @@ import com.example.demo.TestService;
 import com.example.demo.TestUtils;
 import com.example.demo.controllers.OrderController;
 import com.example.demo.controllers.UserController;
+import com.example.demo.model.persistence.Cart;
+import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.UserOrder;
 import com.example.demo.model.persistence.repositories.CartRepository;
@@ -88,5 +90,44 @@ public class OrderControllerTest {
         assertEquals(2, responseBody.size());
         assertEquals(order1, responseBody.get(0));
         assertEquals(order2, responseBody.get(1));
+    }
+
+    @Test
+    public void testSubmitOrder() throws Exception {
+        // Set up test data
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setUsername("testUser");
+        createUserRequest.setPassword("testPassword");
+        createUserRequest.setConfirmPassword("testPassword");
+
+        ResponseEntity<User> createUserResponse = userController.createUser(createUserRequest);
+        assertEquals(HttpStatus.OK, createUserResponse.getStatusCode());
+
+        // Retrieve the created user from the response
+        User createdUser = createUserResponse.getBody();
+        assertNotNull(createdUser);
+
+        // Set up the user's cart
+        Cart cart = new Cart();
+        cart.setUser(createdUser);
+        createdUser.setCart(cart);
+
+        // Create an empty list of items and set it to the cart
+        List<Item> items = new ArrayList<>();
+        cart.setItems(items);
+
+        // Mock repository calls
+        when(userRepo.findByUsername("testUser")).thenReturn(createdUser);
+        when(cartRepo.findByUser(createdUser)).thenReturn(cart);
+
+        // Call the controller method
+        ResponseEntity<UserOrder> response = orderController.submit("testUser");
+
+        // Verify the response
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        UserOrder responseBody = response.getBody();
+        assertNotNull(responseBody);
+        assertEquals(createdUser.getCart().getId(), responseBody.getUser().getCart().getId());
     }
 }
