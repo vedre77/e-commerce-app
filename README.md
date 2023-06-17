@@ -1,3 +1,17 @@
+# eCommerce Application finalized:
+* Implemented authentication and authorization controls; users can only access their data, and data is accessed securely using JSON Web Tokens (JWT).
+* Thorough testing of controllers and persistence is implemented, jacoco report library used to monitor to total test percentage comes close to the standard.
+![jacoco testing report](starter_code/screens/jacoco_test_report.jpg)
+* Backlog implemented with logging of user and order creation and failures, log file exported to Splunk for indexing, querying with SPL, dashboard and alert creation.
+![splunk user and order creation query screenshot](starter_code/screens/splunk_success_query_stats.jpg)
+![splunk user and order dashboard screenshot](starter_code/screens/splunk_success_dashboard.jpg)
+![splunk user and order alert screenshot](starter_code/screens/splunk_success_alert.jpg)
+* Linux based AWS instance deployed with appropriate security settings and SSH security
+
+* Jenkins installed as a docker container (via an Blue Ocean image) on a Linux based AWS instance, where it was used to connect to the repository and successfully deploy the code.
+![jenkins build start](starter_code/screens/jenkins_build_start.jpg)
+![jenkins build end](starter_code/screens/jenkins_build_end.jpg)
+
 # eCommerce Application
 
 In this project, you'll have an opportunity to demonstrate the security and DevOps skills that you learned in this lesson by completing an eCommerce application. You'll start with a template for the complete application, and your goal will be to take this template and add proper authentication and authorization controls so users can only access their data, and that data can only be accessed in a secure way. 
