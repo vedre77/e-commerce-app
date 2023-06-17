@@ -1,3 +1,10 @@
+# eCommerce Application finalized:
+
+* thorough testing of controllers and persistence is implemented, jacoco report library used to monitor to total test percentage comes close to the standard 80% 
+* all functional tests and Postman test collection pass
+* backlog implemented with logging of user and order creation and failures, log file exported to Splunk for indexing, querying with SPL, dashboard and alert creation
+* Jenkins installed as a docker container (via an Blue Ocean image) on a Linux based AWS instance, where it was used to connect to the repository and successfully deploy the code
+
 # eCommerce Application
 
 In this project, you'll have an opportunity to demonstrate the security and DevOps skills that you learned in this lesson by completing an eCommerce application. You'll start with a template for the complete application, and your goal will be to take this template and add proper authentication and authorization controls so users can only access their data, and that data can only be accessed in a secure way. 
