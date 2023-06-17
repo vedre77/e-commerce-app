@@ -6,6 +6,8 @@
 ![splunk user and order creation query screenshot](starter_code/screens/splunk_success_query_stats.jpg)
 ![splunk user and order dashboard screenshot](starter_code/screens/splunk_success_dashboard.jpg)
 ![splunk user and order alert screenshot](starter_code/screens/splunk_success_alert.jpg)
+* Linux based AWS instance deployed with appropriate security settings and SSH security
+
 * Jenkins installed as a docker container (via an Blue Ocean image) on a Linux based AWS instance, where it was used to connect to the repository and successfully deploy the code.
 ![jenkins build start](starter_code/screens/jenkins_build_start.jpg)
 ![jenkins build end](starter_code/screens/jenkins_build_end.jpg)
